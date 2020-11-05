@@ -1,0 +1,76 @@
+let hackablePorts;
+
+export const main = async function(ns) {
+    findHackablePorts(ns);
+    findServer(ns, 'home', 'home', hackServer);
+}
+
+function findServer(ns, startServer, targetServer, func) {
+    let servers = ns.scan(targetServer, true).filter((server) => server !== startServer);
+    servers.forEach((server) => {
+        func.call(this, ns, server);
+        findServer(ns, targetServer, server, func);
+    });
+}
+
+function hackServer(ns, server) {
+    if (crackServer(ns, server)) {
+        ns.killall(server);
+        let scriptRam = ns.getScriptRam('/scripts/hack.ns');
+        let serverRam = ns.getServerRam(server)[0];
+        let threads = Math.floor(serverRam / scriptRam);
+        ns.scp('/scripts/hack.ns', server);
+        if (threads > 0) {
+            ns.exec('/scripts/hack.ns', server, threads, server, threads);
+        }
+    }
+}
+
+function crackServer(ns, server) {
+    if (ns.hasRootAccess(server)) {
+        return true;
+    }
+
+    if(ns.fileExists('BruteSSH.exe')) {
+        ns.brutessh(server);
+    }
+    if(ns.fileExists('FTPCrack.exe')) {
+        ns.ftpcrack(server);
+    }
+    if(ns.fileExists('relaySMTP.exe')) {
+        ns.relaysmtp(server);
+    }
+    if(ns.fileExists('HTTPWorm.exe')) {
+        ns.httpworm(server);
+    }
+    if(ns.fileExists('SQLInject.exe')) {
+        ns.sqlinject(server);
+    }
+    if (ns.getServerRequiredHackingLevel(server) > ns.getHackingLevel() ||
+        ns.getServerNumPortsRequired(server) > hackablePorts) {
+        return false;
+    } else {
+       ns.nuke(server);
+       return true;
+    }
+}
+
+function findHackablePorts(ns) {
+    let hackPorts = 0;
+    if(ns.fileExists('BruteSSH.exe')) {
+        hackPorts += 1;
+    }
+    if(ns.fileExists('FTPCrack.exe')) {
+        hackPorts += 1;
+    }
+    if(ns.fileExists('relaySMTP.exe')) {
+        hackPorts += 1;
+    }
+    if(ns.fileExists('HTTPWorm.exe')) {
+        hackPorts += 1;
+    }
+    if(ns.fileExists('SQLInject.exe')) {
+        hackPorts += 1;
+    }
+    hackablePorts = hackPorts;
+}
