@@ -1,0 +1,17 @@
+export async function main(ns) {
+  let myServers = ns.getPurchasedServers();
+  let targetServers = ns.args;
+  myServers.map((server, index) => {
+    ns.killall(server);
+    let scriptRam = ns.getScriptRam('/scripts/hack.ns');
+    let serverRam = ns.getServerRam(server)[0];
+    let threads = Math.floor(serverRam / scriptRam);
+    let serverIndex = index % targetServers.length;
+    let targetServer = targetServers[serverIndex];
+    ns.tprint(`${server} is hacking ${targetServer} with ${threads} threads.`);
+    ns.scp('/scripts/hack.ns', server);
+    if (threads > 0) {
+        ns.exec('/scripts/hack.ns', server, threads, targetServer, threads);
+    }
+  });
+}
