@@ -8,8 +8,16 @@ export async function main(ns) {
     if (hackableServers) {
         let runAutoHack = await ns.prompt("Would you like to hack available servers?");
         if (runAutoHack) {
+            ns.tprint("hacking");
             ns.run('/scripts/autoHack.ns');
+            ns.tprint("hacked");
         }
+    }
+    let purchaseServers = await ns.prompt("Would you like to purchase servers?");
+    if (purchaseServers) { ns.run('/scripts/purchaseServers.ns'); }
+    if (purchaseServers || runAutoHack) {
+        let remoteHack = await ns.prompt("Would you like to refresh your remote attacks?");
+        if (remoteHack) { ns.run('/scripts/autoRemoteHack.ns'); }
     }
 }
 
@@ -34,7 +42,7 @@ function findHackablePorts(ns) {
 }
 
 function findServer(ns, startServer, targetServer, func) {
-    let servers = ns.scan(targetServer, true).filter((server) => server !== startServer);
+    let servers = ns.scan(targetServer, true).filter((server) => server !== startServer && !server.includes("Chael"));
     servers.forEach((server) => {
         func.call(this, ns, server);
         if (serverStatus(ns, server) !== "🔐") {
