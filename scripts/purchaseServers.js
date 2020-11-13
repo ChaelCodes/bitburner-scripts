@@ -1,6 +1,8 @@
 let maxServers;
 let servers;
 
+import { getServerPrefix } from 'import.js';
+
 export async function main(ns) {
     // Default Values
     maxServers = ns.getPurchasedServerLimit();
@@ -46,7 +48,7 @@ function buyServer(ns, ram) {
         let success = removeWeakestServer(ns, ram);
         if (!success) { return false; }
     }
-    let server = ns.purchaseServer(`ChaelPwns-${ram}GB`, ram);
+    let server = ns.purchaseServer(`${getServerPrefix()}-${ram}GB`, ram);
     servers.push(server);
     ns.tprint(`Purchased ${server}: ${ram}GB`);
     return true;

@@ -1,4 +1,5 @@
 let hackablePorts;
+import { getHackScript, getServerPrefix } from 'import.js';
 
 export const main = async function(ns) {
     findHackablePorts(ns);
@@ -6,7 +7,7 @@ export const main = async function(ns) {
 }
 
 function findServer(ns, startServer, targetServer, func) {
-    let servers = ns.scan(targetServer, true).filter((server) => server !== startServer && !server.includes("Chael"));
+    let servers = ns.scan(targetServer, true).filter((server) => server !== startServer && !server.includes(getServerPrefix()));
     servers.forEach((server) => {
         func.call(this, ns, server);
         findServer(ns, targetServer, server, func);
@@ -16,12 +17,12 @@ function findServer(ns, startServer, targetServer, func) {
 function hackServer(ns, server) {
     if (crackServer(ns, server)) {
         ns.killall(server);
-        let scriptRam = ns.getScriptRam('/scripts/hack.ns');
+        let scriptRam = ns.getScriptRam(getHackScript());
         let serverRam = ns.getServerRam(server)[0];
         let threads = Math.floor(serverRam / scriptRam);
-        ns.scp('/scripts/hack.ns', server);
+        ns.scp(getHackScript(), server);
         if (threads > 0) {
-            ns.exec('/scripts/hack.ns', server, threads, server, threads);
+            ns.exec(getHackScript(), server, threads, server, threads);
         }
     }
 }
