@@ -1,14 +1,15 @@
 let maxValueServers;
+import { getFolder, getServerPrefix } from 'import.js';
 
 export async function main(ns) {
     maxValueServers = [];
     findServer(ns, 'home', 'home', checkValue);
     ns.tprint(maxValueServers);
-    ns.run('/scripts/remoteHack.ns', 1, ...maxValueServers);
+    ns.run(`/${getFolder()}/remoteHack.js`, 1, ...maxValueServers);
 }
 
 function findServer(ns, startServer, targetServer, func) {
-    let servers = ns.scan(targetServer, true).filter((server) => server !== startServer && !server.includes("Chael"));
+    let servers = ns.scan(targetServer, true).filter((server) => server !== startServer && !server.includes(getServerPrefix));
     if (!ns.hasRootAccess(targetServer)) { return false; }
     servers.forEach((server) => {
         func.call(this, ns, server);
