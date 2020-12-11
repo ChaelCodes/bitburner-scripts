@@ -31,7 +31,7 @@ function findServer(ns, startServer, targetServer, func) {
     servers.forEach((server) => {
         func.call(this, ns, server);
         let hackStatus = serverHackStatus(ns, server);
-        if (hackStatus == "🔒") { hackableServers = true }
+        if (hackStatus == "🔒") { hackableServers = true; }
         if (hackStatus !== "🔐") {
             findServer(ns, targetServer, server, func);
         }
