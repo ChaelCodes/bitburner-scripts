@@ -13,7 +13,7 @@ export async function main(ns) {
     ns.tprint('Hey! Thank you for downloading the BitBurner Scripts.');
     ns.tprint(`You've installed these in the ${config.folder} directory.`);
     ns.tprint(
-      `A good place to start is running \`run /${config.folder}/dashboard.js\``
+      `A good place to start is running \`run /${config.folder}/hax.js\``
     );
   } else {
     ns.tprint(
