@@ -1,5 +1,5 @@
 import { getFolder, getServerPrefix } from 'import.js';
-import { serverHackStatus, serverReport } from '/scripts/serverStatus.js'
+import { serverHackStatus, serverReport } from '/scripts/serverStatus.js';
 let hackableServers;
 
 /*
