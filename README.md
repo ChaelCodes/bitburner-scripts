@@ -25,3 +25,6 @@ You can configure your import inside `import.js`.
 
 # Explore! Enjoy!
 Follow instructions, try help with various commands.
+If you see this error:
+![image](https://user-images.githubusercontent.com/8124558/101851194-1b246500-3b29-11eb-9986-7b626bdea51d.png)
+Open the file using `nano` Save & Close it, and try again. There's a bug.
