@@ -1,8 +1,13 @@
+import { getServerPrefix } from 'import.js';
+
 let maxServers;
 let servers;
 
-import { getServerPrefix } from 'import.js';
-
+/*
+ * Purchases the best server available with the
+ * user's current money. If the server limit is
+ * reached, replaces the worst server. Repeatable.
+ */
 export async function main(ns) {
     // Default Values
     maxServers = ns.getPurchasedServerLimit();
@@ -12,10 +17,10 @@ export async function main(ns) {
 }
 
 function serverInfo(ns) {
-   ns.tprint(`You have ${servers.length}/${maxServers} servers`);
-   Object.entries(groupServers(ns)).map((ramServers) => {
-      ns.tprint(`${ramServers[0]}GB: ${ramServers[1]}`); 
-   });
+    ns.tprint(`You have ${servers.length}/${maxServers} servers`);
+    Object.entries(groupServers(ns)).map((ramServers) => {
+        ns.tprint(`${ramServers[0]}GB: ${ramServers[1]}`);
+    });
 }
 
 function groupServers(ns) {
@@ -61,7 +66,9 @@ function removeWeakestServer(ns, newRam) {
         ns.tprint(`Your smallest server has ${min}GB RAM and you wanted to purchase ${newRam}GB server`);
         return false;
     }
-    ns.deleteServer(groupedServers[min][0]);
+    let smallest_server = groupedServers[min][0];
+    ns.killall(smallest_server);
+    let result = ns.deleteServer(smallest_server);
     servers = ns.getPurchasedServers(true);
     return true;
 }

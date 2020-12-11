@@ -1,7 +1,12 @@
-let hackablePorts;
 import { getHackScript, getServerPrefix } from 'import.js';
+let hackablePorts;
 
-export const main = async function(ns) {
+/* Searches for servers that are hackable,
+ * cracks them if you don't have root access,
+ * installs a hack script, and instructs them to
+ * HACK THEMSELVES
+ */
+export const main = async function (ns) {
     findHackablePorts(ns);
     findServer(ns, 'home', 'home', hackServer);
 }

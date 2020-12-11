@@ -1,11 +1,15 @@
-let maxValueServers;
 import { getFolder, getServerPrefix } from 'import.js';
+let maxValueServers;
 
+/* Identify servers worth more than $10 Billion,
+ * deploy the hack script and attack those servers
+ * using all purchased servers.
+ */
 export async function main(ns) {
     maxValueServers = [];
     findServer(ns, 'home', 'home', checkValue);
     ns.tprint(maxValueServers);
-    ns.run(`/${getFolder()}/remoteHack.js`, 1, ...maxValueServers);
+    ns.run(`/${getFolder()}/remoteHack.js`, 1, maxValueServers.join(','));
 }
 
 function findServer(ns, startServer, targetServer, func) {
@@ -20,7 +24,7 @@ function findServer(ns, startServer, targetServer, func) {
 }
 
 function checkValue(ns, server) {
-    if(ns.getServerMaxMoney(server) > 10000000000 && ns.hasRootAccess(server)) {
+    if (ns.getServerMaxMoney(server) > 10000000000 && ns.hasRootAccess(server)) {
         maxValueServers.push(server);
     }
 }
