@@ -7,14 +7,23 @@ export async function main(ns) {
 
 async function runCommand(ns, command) {
   switch (command) {
+    case 'automate':
     case 'autoHack':
     case 'autoRemoteHack':
     case 'dashboard':
     case 'purchaseServers':
       ns.run(`/${getFolder()}/${command}.js`);
       break;
+    case 'sudo autohack':
     case 'sudo autoHack':
       ns.run(`/${getFolder()}/autoHack.js`);
+      ns.run(`/${getFolder()}/autoRemoteHack.js`);
+      break;
+    case 'autohack':
+      ns.run(`/${getFolder()}/autoHack.js`);
+      break;
+    case 'serverhack':
+    case 'serverHack':
       ns.run(`/${getFolder()}/autoRemoteHack.js`);
       break;
     case 'status':

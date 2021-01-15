@@ -68,8 +68,7 @@ function buyNodes(ns) {
         purchaseNodes = buyNode(ns);
         if (purchaseNodes) { i++; }
     }
-    ns.tprint(nodesPurchased ? '✔️Nodes Purchased' : 'You cannot afford a node.😢');
-    return true;
+    return i;
 }
 
 function getMaxNodeCost(ns, index) {

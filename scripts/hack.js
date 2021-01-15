@@ -10,6 +10,7 @@ export async function main(ns, args) {
 }
 
 async function hackServer(ns, server, threads) {
+    ns.disableLog('getServerSecurityLevel');
     let serverSecurityThreshold = ns.getServerMinSecurityLevel(server) + 2;
     let serverMoneyThreshold = ns.getServerMaxMoney(server) * 0.95;
     let opts = { threads: threads, stock: true };
