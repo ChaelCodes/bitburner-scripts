@@ -1,15 +1,20 @@
 import { getFolder, getServerPrefix } from 'import.js';
 let maxValueServers;
+let serverValue = 0;
 
 /* Identify servers worth more than $10 Billion,
  * deploy the hack script and attack those servers
  * using all purchased servers.
  */
 export async function main(ns) {
-    maxValueServers = [];
+    maxValueServers = {
+        zero: [],
+        million: [],
+        billion: [],
+        trillion: []
+    };
     findServer(ns, 'home', 'home', checkValue);
-    ns.tprint(maxValueServers);
-    ns.run(`/${getFolder()}/remoteHack.js`, 1, maxValueServers.join(','));
+    ns.run(`/${getFolder()}/remoteHack.js`, 1, highest(ns).join(','));
 }
 
 function findServer(ns, startServer, targetServer, func) {
@@ -24,7 +29,29 @@ function findServer(ns, startServer, targetServer, func) {
 }
 
 function checkValue(ns, server) {
-    if (ns.getServerMaxMoney(server) > 10000000000 && ns.hasRootAccess(server)) {
-        maxValueServers.push(server);
+    if (!ns.hasRootAccess(server)) {
+        return;
+    }
+    let serverMoney = ns.getServerMaxMoney(server);
+    if (serverMoney > 1e12) {
+        maxValueServers.trillion.push(server);
+    } else if (serverMoney > 1e9) {
+        maxValueServers.billion.push(server);
+    } else if (serverMoney > 0) {
+        maxValueServers.million.push(server);
+    } else {
+        maxValueServers.zero.push(server);
+    }
+}
+
+function highest(ns) {
+    if (maxValueServers.trillion.length > 0) {
+        return maxValueServers.trillion;
+    }
+    if (maxValueServers.billion.length > 0) {
+        return maxValueServers.billion;
+    }
+    if (maxValueServers.million.length > 0) {
+        return maxValueServers.million;
     }
 }
