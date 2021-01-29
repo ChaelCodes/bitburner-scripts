@@ -7,7 +7,6 @@ export async function main(ns) {
 
 async function runCommand(ns, command) {
   switch (command) {
-    case 'automate':
     case 'autoHack':
     case 'autoRemoteHack':
     case 'dashboard':
