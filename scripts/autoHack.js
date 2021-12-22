@@ -7,7 +7,6 @@ let hackablePorts;
  * HACK THEMSELVES
  */
 export const main = async function (ns) {
-    ns.tprint('HACKING');
     findHackablePorts(ns);
     await findServer(ns, 'home', 'home', hackServer);
 }
