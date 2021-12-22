@@ -7,29 +7,36 @@ let hackablePorts;
  * HACK THEMSELVES
  */
 export const main = async function (ns) {
+    ns.tprint('HACKING');
     findHackablePorts(ns);
-    findServer(ns, 'home', 'home', hackServer);
+    await findServer(ns, 'home', 'home', hackServer);
 }
 
-function findServer(ns, startServer, targetServer, func) {
+async function findServer(ns, startServer, targetServer, func) {
     let servers = ns.scan(targetServer, true).filter((server) => server !== startServer && !server.includes(getServerPrefix()));
-    servers.forEach((server) => {
-        func.call(this, ns, server);
-        findServer(ns, targetServer, server, func);
-    });
-}
-
-function hackServer(ns, server) {
-    if (crackServer(ns, server)) {
-        ns.killall(server);
-        let scriptRam = ns.getScriptRam(getHackScript());
-        let serverRam = ns.getServerRam(server)[0];
-        let threads = Math.floor(serverRam / scriptRam);
-        ns.scp(getHackScript(), server);
-        if (threads > 0) {
-            ns.exec(getHackScript(), server, threads, server, threads);
+    for (const server of servers) {
+        // const funct = async () => { func.call(this, ns, server) };
+        const success = await func.call(this, ns, server);
+        if (success) {
+            await findServer(ns, targetServer, server, func);
         }
     }
+}
+
+async function hackServer(ns, server) {
+    if (!crackServer(ns, server)) {
+        return false;
+    }
+    ns.killall(server);
+    let scriptRam = ns.getScriptRam(getHackScript());
+    let serverRam = ns.getServerMaxRam(server);
+    let threads = Math.floor(serverRam / scriptRam);
+    await ns.scp(getHackScript(), server);
+    ns.tprint(`Starting ${threads} processes on ${server}`);
+    if (threads > 0) {
+        ns.exec(getHackScript(), server, threads, server, threads);
+    }
+    return true;
 }
 
 function crackServer(ns, server) {
@@ -61,7 +68,7 @@ function crackServer(ns, server) {
     }
 }
 
-function findHackablePorts(ns) {
+export function findHackablePorts(ns) {
     let hackPorts = 0;
     if (ns.fileExists('BruteSSH.exe')) {
         hackPorts += 1;
