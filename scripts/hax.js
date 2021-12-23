@@ -36,6 +36,10 @@ async function runCommand(ns, command) {
     case 'purchaseHacknet':
       ns.run(`/${getFolder()}/buyHacknet.js`, 1, 'buyNode');
       break;
+    case 'upgradeHacknet':
+      ns.run(`/${getFolder()}/buyHacknet.js`, 1, 'buyNode');
+      ns.run(`/${getFolder()}/buyHacknet.js`, 1, 'upgradeNodes');
+      break;
     case 'buyServer':
     case 'purchaseServer':
     case 'buyServers':
@@ -54,4 +58,8 @@ async function indecisiveBuyer(ns) {
     ns.run(`/${getFolder()}/buyHacknet.js`, 1, 'buyNode');
     ns.tprint(`You've bought a node. See \`run /${getFolder()}/buyHacknet.js\` for more options.`);
   }
+}
+
+export function autocomplete(data, args){
+  return ['autoHack', 'autoRemoteHack','dashboard','buy', 'purchaseServer', 'buyHacknet', 'upgradeHacknet'];
 }
