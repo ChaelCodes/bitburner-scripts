@@ -14,7 +14,6 @@ export const main = async function (ns) {
 async function findServer(ns, startServer, targetServer, func) {
     let servers = ns.scan(targetServer, true).filter((server) => server !== startServer && !server.includes(getServerPrefix()));
     for (const server of servers) {
-        // const funct = async () => { func.call(this, ns, server) };
         const success = await func.call(this, ns, server);
         if (success) {
             await findServer(ns, targetServer, server, func);
@@ -31,8 +30,8 @@ async function hackServer(ns, server) {
     let serverRam = ns.getServerMaxRam(server);
     let threads = Math.floor(serverRam / scriptRam);
     await ns.scp(getHackScript(), server);
-    ns.tprint(`Starting ${threads} processes on ${server}`);
     if (threads > 0) {
+        ns.print(`Starting ${threads} processes on ${server}`);
         ns.exec(getHackScript(), server, threads, server, threads);
     }
     return true;
@@ -63,6 +62,7 @@ function crackServer(ns, server) {
         return false;
     } else {
         ns.nuke(server);
+        ns.tprint(`New Server Cracked: ${server}!`);
         return true;
     }
 }
