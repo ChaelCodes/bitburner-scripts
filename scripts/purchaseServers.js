@@ -44,21 +44,26 @@ async function buyServers(ns) {
             serverCost = ns.getPurchasedServerCost(ram);
         }
         shopServer = await ns.prompt(`Would you like to buy a ${ram}GB server for ${ns.nFormat(serverCost, "$0.00a")}`);
-        if (shopServer) { shopServer = buyServer(ns, ram); }
+        if (shopServer) { shopServer = buyServer(ns, ram, myMoney, serverCost); }
     }
 }
 
-function buyServer(ns, ram) {
+function buyServer(ns, ram, myMoney, serverCost) {
     if (servers.length == maxServers) {
         let success = removeWeakestServer(ns, ram);
         if (!success) { return false; }
     }
-    let server = ns.purchaseServer(`${getServerPrefix()}-${ram}GB`, ram);
-    servers.push(server);
-    ns.tprint(`Purchased ${server}: ${ram}GB`);
+    if (myMoney > serverCost) {
+        let server = ns.purchaseServer(`${getServerPrefix()}-${ram}GB`, ram);
+        servers.push(server);
+        ns.tprint(`Purchased ${server}: ${ram}GB`);
+    }
+    else {
+        ns.tprint('Not enough money to buy server');
+        return false;
+    }
     return true;
 }
-
 function removeWeakestServer(ns, newRam) {
     let groupedServers = groupServers(ns);
     let min = Math.min(...Object.keys(groupedServers));
